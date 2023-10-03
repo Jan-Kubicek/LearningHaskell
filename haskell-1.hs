@@ -16,3 +16,5 @@ jemensi a b = a < b
 mensi a b = if(a < b) then a else b
 vetsi a b = if(a >b) then a else b
 logickySoucet a b = if a then True else if b then True else False
+pyr 1 = 1
+pyr n = (n+(n-1))^2 + pyr(n-1) -- funguje správně
