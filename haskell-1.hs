@@ -71,3 +71,14 @@ nsd a b  = nsd b x
 nsd a 0 = a
 nsd a b  = nsd b (zbytekPoDeleni a b) 
 -}
+-- to binary
+bin 0 = 1--b = b
+bin a --b
+   -- | a > 0 = if((mod a 2) == 0 ) then b ++ "0" else b ++ "1" 
+    | otherwise = bin (a-2) --b
+
+bin2::(Int -> Int, String -> String)
+bin2 0 s = s
+bin2 n s
+    | n > 0 = if((mod n 2) == 0 ) then s ++ "0" else s ++ "1"
+    | otherwise =  bin2 round(n/2) s 
