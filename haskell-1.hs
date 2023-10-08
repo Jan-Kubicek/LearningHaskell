@@ -77,8 +77,10 @@ bin a --b
    -- | a > 0 = if((mod a 2) == 0 ) then b ++ "0" else b ++ "1" 
     | otherwise = bin (a-2) --b
 
-bin2::(Int -> Int, String -> String)
-bin2 0 s = s
-bin2 n s
-    | n > 0 = if((mod n 2) == 0 ) then s ++ "0" else s ++ "1"
-    | otherwise =  bin2 round(n/2) s 
+
+--bin2::(Int -> Int, String -> String)
+
+bin2 n s 
+    | n > 0 = if((mod n 2) == 0) then bin2 round(n/2) (s ++ "0") else bin2 round(n/2) (s ++ "1") 
+    | otherwise = s
+--pattern1 a b  = pattern1 (a+round(b/10) b/10)
