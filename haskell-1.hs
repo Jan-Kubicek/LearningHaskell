@@ -79,8 +79,85 @@ bin a --b
 
 
 --bin2::(Int -> Int, String -> String)
-
+{-
 bin2 n s 
     | n > 0 = if((mod n 2) == 0) then bin2 round(n/2) (s ++ "0") else bin2 round(n/2) (s ++ "1") 
     | otherwise = s
 --pattern1 a b  = pattern1 (a+round(b/10) b/10)
+-}
+{-
+bin2 0 s = 0
+bin2 n s = if((mod n 2) == 0) then bin2 round(n/2) s++"0" else bin2 round(n/2) s++"1"
+-}
+
+pattern1 0 = 0
+pattern1 n = pattern1(n-1) + n
+
+--intenzionální zápis [x| x <- [1..6], even x] -> [2,4,6]
+--             Transformace  Generátor  Filtrace
+--                  [ f(x) | x <-s, p(x)]
+-- [1..10]      [0,2..10]
+
+-- Seznamy
+s1 = [1..100]
+s2 = [100,99..1]
+s3 = [-1,-2..(-10)]
+s4 = [10,20..100]
+s5 = [100,90..10]
+s6 = [ x ^ 2 | x <- [1..10]] -- zde není filtr jen transformace 
+s7 = [ [x,y,z] | x <- [1..4], y <- [1..4], z <-[1..4]] -- variace (použití více generátorů najednou)
+{-
+    Generátor generuje od posledního generátoru ( dokud mu nedojdou možnosti )
+    Podobný vnořeným for cyklům
+-}
+s7'= let s = [1..4] in [[x,y,z] | x <- s , y <- s , z <- s ]
+-- výraz let s nahrazuje všechny svoje instance s za seznam od 1 do 4 
+
+s7''= let s = [1..4] in [(x,y,z) | x <- s , y <- s , z <- s ]
+-- výraz vytváří n-tice nikoliv seznamy (s n-ticemi je horší manipulace)
+
+s8 = [ x ^ 2 | x <-[1..10] , even x]
+
+s9 = let c = 1200600 in [ x | x <- [1..c], (mod c x) == 0] -- delitele cisla 1200600
+s9' c = [ x | x <- [1..c], (mod c x) == 0] -- delitele cisla c
+
+-- manipulace se seznamem
+prvniPrvek [] = error"Kde nic neni ani smrt nebere"
+prvniPrvek (h:t) = h    --sekani hlav (cutting head) 
+prvniPrvek' (h:_) = h -- pokud nás tělo vůbec nezajímá
+-- manipulace se seznamem v půlsemestrálce
+zbytekVSeznamu (h:t) = t
+zbytekVSeznamu' (_:t) = t -- pokud nás hlava vůbec nezajímá
+{-
+    vždy vzory závorkovat
+-}
+
+druhyPrvek' (_:h:_) = h 
+druhyPrvek'' (_:t) = prvniPrvek t
+
+posledniPrvek [x] = x
+posledniPrvek (_:xt) = posledniPrvek xt 
+
+predPosledniPrvek [x] = error"Nemá smysl"
+predPosledniPrvek [x,_] = x -- vzor pro výsledek [x,y] 
+predPosledniPrvek (_:t) = predPosledniPrvek t
+-- musíme si prvně naimplementovat "když mám štěstí a až poté pokračovat ulehčí nám to práci"
+
+isPrvekHere a [] = False
+isPrvekHere a (h:t) = if( h == a) then True else isPrvekHere a t
+-- 2. koncové podmínky rekurze
+-- elem funkce
+
+nty_prvek 1 (h:_) = h
+nty_prvek k (h:t) = nty_prvek (k-1) t
+-- počítáme od 1
+
+pocetPrvkuVPoli k [] = k
+pocetPrvkuVPoli k (h:t) = pocetPrvkuVPoli (k+1) t
+
+pocetPrvkuVPoli' [] = 0
+pocetPrvkuVPoli' (h:t) = 1 + pocetPrvkuVPoli' t 
+
+indexPrvkuVPoli k x [y] = y
+indexPrvkuVPoli k x (h:t) = if( x == h) then k else indexPrvkuVPoli (k+1) x t
+-- k je index x je vyhledávaný výraz
