@@ -161,3 +161,48 @@ pocetPrvkuVPoli' (h:t) = 1 + pocetPrvkuVPoli' t
 indexPrvkuVPoli k x [y] = y
 indexPrvkuVPoli k x (h:t) = if( x == h) then k else indexPrvkuVPoli (k+1) x t
 -- k je index x je vyhledávaný výraz
+
+smazPrvni s [] = []
+smazPrvni s (h:t) = if (s == h) then t else h: smazPrvni s t
+
+smazVsechny s [] = []
+smazVsechny s (h:t) = if( s == h) then smazVsechny s t else h: smazVsechny s t
+
+otoc [] akumulator = akumulator
+otoc (h:t) akumulator = otoc t (h:akumulator) 
+-- 2. parametry
+
+-- 1. parametr =>
+otoc' xs = otoc xs []
+-- funkce s jedním parametrem využívá funkce se 2. parametry
+
+-- funkce vyšších řádů je schopna přijmou nebo vrátit funkci 
+-- řezy umožňují vytváření částečných aplikací funkcí
+
+-- řezy         řez => (+2)  "pojmenování výrazu"
+zvysO2 = (+2)
+
+umocniNa6 = (^6)
+
+umocni6 = (^) 6
+umocni6' = (6^)
+
+aplikujBinarniFunkcni a b f = f a b
+
+a1 = aplikujBinarniFunkcni 8 4 (*) 
+a2 = aplikujBinarniFunkcni 5 9 zbytekPoDeleni
+
+abf12 = aplikujBinarniFunkcni 1 2
+
+zvys [] = []
+zvys (h:t) = (h+1): zvys t
+
+zvys' [] = []
+zvys' (h:t) = aplikujBinarniFunkcni 1 h (+) : zvys' t
+
+aplikujNaSeznam [] f = []
+aplikujNaSeznam (h:t) f = f h : aplikujNaSeznam t f
+-- map
+-- aplikujNaSeznam [1..5] (^3)
+
+aplikuj = aplikujNaSeznam [(+),(-),(/),(*)] abf12
